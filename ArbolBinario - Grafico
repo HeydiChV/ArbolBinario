@@ -1,0 +1,144 @@
+import javax.swing.*;
+import java.awt.*;
+
+class NodoArbol {
+    int valor;
+    NodoArbol izquierdo;
+    NodoArbol derecho;
+
+    public NodoArbol(int valor) {
+        this.valor = valor;
+        izquierdo = null;
+        derecho = null;
+    }
+}
+
+class ArbolBinario {
+    NodoArbol raiz;
+
+    public ArbolBinario() {
+        raiz = null;
+    }
+
+    public void insertar(int valor) {
+        raiz = insertarRec(raiz, valor);
+    }
+
+    private NodoArbol insertarRec(NodoArbol raiz, int valor) {
+        if (raiz == null) {
+            raiz = new NodoArbol(valor);
+            return raiz;
+        }
+
+        if (valor < raiz.valor) {
+            raiz.izquierdo = insertarRec(raiz.izquierdo, valor);
+        } else if (valor > raiz.valor) {
+            raiz.derecho = insertarRec(raiz.derecho, valor);
+        }
+
+        return raiz;
+    }
+
+    public void inorden() {
+        inordenRec(raiz);
+    }
+
+    private void inordenRec(NodoArbol raiz) {
+        if (raiz != null) {
+            inordenRec(raiz.izquierdo);
+            System.out.print(raiz.valor + " ");
+            inordenRec(raiz.derecho);
+        }
+    }
+
+    public void preorden() {
+        preordenRec(raiz);
+    }
+
+    private void preordenRec(NodoArbol raiz) {
+        if (raiz != null) {
+            System.out.print(raiz.valor + " ");
+            preordenRec(raiz.izquierdo);
+            preordenRec(raiz.derecho);
+        }
+    }
+
+    public void postorden() {
+        postordenRec(raiz);
+    }
+
+    private void postordenRec(NodoArbol raiz) {
+        if (raiz != null) {
+            postordenRec(raiz.izquierdo);
+            postordenRec(raiz.derecho);
+            System.out.print(raiz.valor + " ");
+        }
+    }
+
+    public void dibujarArbol() {
+        JFrame frame = new JFrame("Arbol Binario");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        TreePanel panel = new TreePanel(raiz);
+        frame.add(panel);
+        frame.setVisible(true);
+        System.out.println("===========ARBOL BINARIO==============");
+        System.out.println("NOMBRE: Heydi Damaris Chaiña Velasquez");
+        System.out.println("======================================");
+    }
+
+    public static void main(String[] args) {
+        ArbolBinario arbol = new ArbolBinario();
+        arbol.insertar(9);
+        arbol.insertar(5);
+        arbol.insertar(17);
+        arbol.insertar(12);
+        arbol.insertar(8);
+        arbol.insertar(3);
+        arbol.insertar(19);
+        arbol.insertar(10);
+        arbol.insertar(11);
+        arbol.insertar(6);
+
+        arbol.dibujarArbol();
+    }
+}
+
+class TreePanel extends JPanel {
+    private NodoArbol raiz;
+    private int radio = 20; // Radio de los nodos
+
+    public TreePanel(NodoArbol raiz) {
+        this.raiz = raiz;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (raiz != null) {
+            dibujarArbol(g, getWidth() / 2, 30, raiz, getWidth() / 4);
+        }
+    }
+
+    private void dibujarArbol(Graphics g, int x, int y, NodoArbol nodo, int xOffset) {
+        g.setColor(Color.BLACK);
+        g.drawOval(x - radio, y - radio, radio * 2, radio * 2);
+        g.drawString(String.valueOf(nodo.valor), x - 5, y + 5);
+        if (nodo.izquierdo != null) {
+            int xLeft = x - xOffset;
+            int yLeft = y + 50;
+            g.drawLine(x, y, xLeft, yLeft);
+            dibujarArbol(g, xLeft, yLeft, nodo.izquierdo, xOffset / 2);
+        }
+        if (nodo.derecho != null) {
+            int xRight = x + xOffset;
+            int yRight = y + 50;
+            g.drawLine(x, y, xRight, yRight);
+            dibujarArbol(g, xRight, yRight, nodo.derecho, xOffset / 2);
+        
+        
+        }
+    }
+}
+
+
